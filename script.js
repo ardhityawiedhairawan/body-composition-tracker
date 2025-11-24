@@ -56,7 +56,7 @@ const hideModal = (id)=>bootstrap.Modal.getOrCreateInstance(document.getElementB
 
 function renderProfileHeader() {
   let prof = getProfile();
-  document.getElementById('userName').textContent = prof ? `Hello, ${prof.name} (${prof.weight} kg | ${prof.height} cm)` : '';
+  document.getElementById('userName').textContent = prof ? `Hello, ${prof.name} | ${prof.height} cm | Age: ${prof.age})` : '';
 }
 
 function renderTable() {
@@ -95,8 +95,8 @@ document.getElementById('profileForm').onsubmit = function(e){
   const f = e.target;
   setProfile({
     name: f.name.value,
-    weight: parseFloat(f.weight.value),
-    height: parseInt(f.height.value)
+    height: parseInt(f.height.value),
+    age: parseInt(f.age.value) 
   });
   renderProfileHeader();
   hideModal('profileModal');
@@ -107,7 +107,7 @@ document.getElementById('editProfileBtn').onclick = function() {
   let prof = getProfile() || {};
   let f = document.getElementById('profileForm');
   f.name.value = prof.name||'';
-  f.weight.value = prof.weight||'';
+  f.age.value = prof.age||'';
   f.height.value = prof.height||'';
   showModal('profileModal');
 };
@@ -151,7 +151,7 @@ document.getElementById('exportBtn').onclick = function(){
   // Profile info at the top
   const profileHeader = [
     `Name: ${prof.name}`,
-    `Weight (kg): ${prof.weight}`,
+    `Age: ${prof.age}`,
     `Height (cm): ${prof.height}`,
     "" // empty line for separation
   ];
@@ -195,8 +195,8 @@ document.querySelector("tbody").onclick = function(e){
     let hasil = Object.keys(rekomendasi).map(param=>{
       let v = data[param];
       let key = paramLabels[param] || param;
-      let status = param==="bodyAge" ?
-        rekomendasi[param].status(v, prof?prof.weight:null) :
+      let status = param === "bodyAge" ?
+        rekomendasi[param].status(v, prof?prof.age:null) :
         rekomendasi[param].status(v);
       return {
         label: key,
@@ -206,7 +206,7 @@ document.querySelector("tbody").onclick = function(e){
         rec:rekomendasi[param].rec
       }
     });
-    let html = `${prof.name} (${prof.weight} kg | ${prof.height} cm)
+    let html = `${prof.name} (${prof.age} | ${prof.height} cm)
     <div><b>Date:</b> ${data.date}</div>
     <table class="table table-sm table-responsive">
     <thead><tr>
@@ -248,3 +248,4 @@ document.querySelector("tbody").onclick = function(e){
 };
 
 renderTable();
+
