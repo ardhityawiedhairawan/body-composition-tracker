@@ -1,4 +1,5 @@
 const paramLabels = {
+  weight: "Weight (kg)",
   bmi: "BMI",
   bodyFat: "Body Fat (%)",
   visceralFat: "Visceral Fat",
@@ -72,6 +73,7 @@ function renderTable() {
       let tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${row.date}</td>
+        <td>${row.weight || ''}</td>
         <td>${row.bodyFat}</td>
         <td>${row.visceralFat}</td>
         <td>${row.bodyAge}</td>
@@ -122,6 +124,7 @@ document.getElementById('inputForm').onsubmit = function(e){
   const f = e.target;
   let obj = {
     date: f.date.value,
+    weight: parseFloat(f.weight.value),
     bmi: parseFloat(f.bmi.value),
     bodyFat: parseFloat(f.bodyFat.value),
     visceralFat: parseFloat(f.visceralFat.value),
@@ -157,7 +160,7 @@ document.getElementById('exportBtn').onclick = function(){
   ];
   // CSV header
   const csvHeader = [
-    "Date", "BMI", "Body Fat (%)", "Visceral Fat", "Body Age",
+    "Date", "Weight (kg)", "BMI", "Body Fat (%)", "Visceral Fat", "Body Age",
     "Subcutaneous Fat (%)", "Trunk Subcutaneous (%)", "Arms Fat (%)", "Legs Fat (%)",
     "Skeletal Muscle (%)", "Skeletal Trunk (%)", "Skeletal Arms (%)", "Skeletal Legs (%)",
     "BMR (kcal)"
@@ -165,7 +168,7 @@ document.getElementById('exportBtn').onclick = function(){
   // Map each row to CSV format
   const rows = arr.map(row =>
     [
-      row.date, row.bmi, row.bodyFat, row.visceralFat, row.bodyAge,
+      row.date, row.weight || '', row.bmi, row.bodyFat, row.visceralFat, row.bodyAge,
       row.subcutaneous, row.trunkSubcutaneous, row.armsFat, row.legsFat,
       row.skeletalMuscle, row.skeletalTrunk, row.skeletalArms, row.skeletalLegs,
       row.bmr
