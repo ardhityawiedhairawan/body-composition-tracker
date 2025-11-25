@@ -73,7 +73,6 @@ function renderTable() {
       let tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${row.date}</td>
-        <td>${row.weight || ''}</td>
         <td>${row.bodyFat}</td>
         <td>${row.visceralFat}</td>
         <td>${row.bodyAge}</td>
@@ -250,5 +249,38 @@ document.querySelector("tbody").onclick = function(e){
   }
 };
 
-renderTable();
+document.getElementById('printFormBtn').onclick = function(){
+  // const profile = getProfile();
+  // const userName = profile ? profile.name : '.........................';
+  // const userAge = profile ? profile.age : '.........................';
+  // const userHeight = profile ? profile.height : '.........................';
 
+  // document.querySelectorAll('.printable-form .profile-info').forEach(info => {
+  //   const nameDiv = info.querySelector('div:first-child');
+  //   nameDiv.innerHTML = `<strong> ${userName}</strong>`;
+  //   const extraDiv = info.querySelector('div:last-child');
+  //   extraDiv.innerHTML = `Age: ${userAge} / Height: ${userHeight} cm`;
+  // });
+
+  window.print();
+};
+
+function generatePrintableForms() {
+  const printableArea = document.getElementById('printableArea');
+  const formTemplate = printableArea.querySelector('.printable-form');
+  if (!formTemplate) return;
+
+  const templateHTML = formTemplate.innerHTML;
+  printableArea.innerHTML = ''; // Clear the area
+
+  for (let i = 0; i < 6; i++) {
+    const newForm = document.createElement('div');
+    newForm.className = 'printable-form';
+    newForm.innerHTML = templateHTML;
+    printableArea.appendChild(newForm);
+  }
+}
+
+// Generate the forms when the page loads
+generatePrintableForms();
+renderTable();
