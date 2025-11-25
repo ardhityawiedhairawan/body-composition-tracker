@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilai Referensi Kesehatan - Pria dan Wanita</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #34495e;
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+        
+        tbody tr:nth-child(odd) {
+            background: #f9f9f9;
+        }
+        
+        tbody tr:hover {
+            background: #ecf0f1;
+            transition: background 0.2s;
+        }
+        
+        .notes {
+            background: #e8f4f8;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        
+        .notes h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .notes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .notes li {
+            color: #34495e;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .notes li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .gender-label {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+        
+        .male {
+            background: #d4e6f1;
+            color: #1a5c7a;
+        }
+        
+        .female {
+            background: #fad7a0;
+            color: #7a4c0f;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-print {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-print:hover {
+            background: #229954;
+        }
+        
+        .btn-download {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-download:hover {
+            background: #2980b9;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 10px;
+                margin: 0;
+            }
+            
+            .header {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 11px;
+            }
+            
+            .section {
+                margin-bottom: 15px;
+                page-break-inside: avoid;
+            }
+            
+            .section h2 {
+                font-size: 14px;
+                margin-bottom: 8px;
+                padding-bottom: 5px;
+            }
+            
+            table {
+                margin-bottom: 0;
+                font-size: 10px;
+            }
+            
+            th, td {
+                padding: 5px 8px;
+            }
+            
+            .notes {
+                padding: 10px;
+                margin-top: 0;
+            }
+            
+            .notes h3 {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+            
+            .notes li {
+                font-size: 10px;
+                margin-bottom: 3px;
+                padding-left: 15px;
+            }
+            
+            .controls {
+                display: none;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Panduan Nilai Referensi Kesehatan</h1>
+            <p>Parameter kesehatan untuk pria dan wanita usia 25-39 dan 40-49 tahun</p>
+        </div>
+        
+        <div class="section">
+            <h2>Tabel Referensi Lengkap</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th><span class="gender-label male">PRIA</span> 25-39 Tahun</th>
+                        <th><span class="gender-label male">PRIA</span> 40-49 Tahun</th>
+                        <th><span class="gender-label female">WANITA</span> 25-39 Tahun</th>
+                        <th><span class="gender-label female">WANITA</span> 40-49 Tahun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Usia</strong></td>
+                        <td>25 - 39 tahun</td>
+                        <td>40 - 49 tahun</td>
+                        <td>25 - 39 tahun</td>
+                        <td>40 - 49 tahun</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BMI</strong></td>
+                        <td>18.5 - 24.9</td>
+                        <td>18.5 - 24.9</td>
+                        <td>18.5 - 24.9</td>
+                        <td>18.5 - 24.9</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Body Fat %</strong></td>
+                        <td>10 - 20%</td>
+                        <td>12 - 22%</td>
+                        <td>25 - 31%</td>
+                        <td>25 - 31%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visceral Fat Level</strong></td>
+                        <td>1 - 9 (normal)</td>
+                        <td>1 - 9 (normal)</td>
+                        <td>1 - 9 (normal)</td>
+                        <td>1 - 9 (normal)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Whole Body Subcutaneous</strong></td>
+                        <td>12 - 14%</td>
+                        <td>12 - 14%</td>
+                        <td>16 - 20%</td>
+                        <td>16 - 20%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trunk Subcutaneous</strong></td>
+                        <td>10 - 12%</td>
+                        <td>10 - 12%</td>
+                        <td>12 - 16%</td>
+                        <td>12 - 16%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Arms Fat %</strong></td>
+                        <td>15 - 20%</td>
+                        <td>15 - 20%</td>
+                        <td>22 - 28%</td>
+                        <td>22 - 28%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Legs Fat %</strong></td>
+                        <td>15 - 20%</td>
+                        <td>15 - 20%</td>
+                        <td>18 - 22%</td>
+                        <td>18 - 22%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Muscle %</strong></td>
+                        <td>&gt; 30%</td>
+                        <td>&gt; 28%</td>
+                        <td>&gt; 24%</td>
+                        <td>&gt; 22%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Trunk %</strong></td>
+                        <td colspan="4" style="text-align: center; color: #27ae60; font-weight: 600;">Lebih besar = Baik</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Arms %</strong></td>
+                        <td colspan="4" style="text-align: center; color: #27ae60; font-weight: 600;">Lebih besar = Baik</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Legs %</strong></td>
+                        <td colspan="4" style="text-align: center; color: #27ae60; font-weight: 600;">Lebih besar = Baik</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kebutuhan Kalori (BMR)</strong></td>
+                        <td>1400 - 1700 kkal</td>
+                        <td>1300 - 1600 kkal</td>
+                        <td>1200 - 1500 kkal</td>
+                        <td>1100 - 1400 kkal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Penjelasan Parameter Kesehatan</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Penjelasan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BMI (Body Mass Index)</strong></td>
+                        <td>Indeks massa tubuh: berat (kg) / tinggi² (m). Rentang 18.5-24.9 dianggap normal/sehat untuk semua kelompok umur.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Body Fat %</strong></td>
+                        <td>Persentase lemak tubuh total. Wanita secara alami memiliki body fat lebih tinggi dari pria. Lemak tubuh wanita >32% dianggap obesitas.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visceral Fat</strong></td>
+                        <td>Lemak yang mengelilingi organ internal. Level 1-9 dianggap normal; >10 menunjukkan risiko kesehatan.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Subcutaneous Fat</strong></td>
+                        <td>Lemak di bawah kulit. Whole body adalah total, sementara trunk adalah di area perut/dada.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Muscle %</strong></td>
+                        <td>Persentase otot rangka. Pria umumnya memiliki persentase otot lebih tinggi. Semakin tinggi lebih baik untuk metabolisme.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Trunk %</strong></td>
+                        <td>Persentase otot rangka pada area batang tubuh. Nilai yang lebih tinggi menunjukkan status kebugaran yang lebih baik dan stabilitas inti yang kuat.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Arms %</strong></td>
+                        <td>Persentase otot rangka pada lengan. Nilai yang lebih tinggi mengindikasikan kekuatan lengan dan aktivitas fisik yang optimal.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skeletal Legs %</strong></td>
+                        <td>Persentase otot rangka pada kaki. Nilai yang lebih tinggi menunjukkan kekuatan kaki dan kapasitas kardiovaskular yang baik.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BMR (Basal Metabolic Rate)</strong></td>
+                        <td>Jumlah kalori yang dibutuhkan tubuh saat istirahat. Wanita umumnya memiliki BMR lebih rendah dari pria.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="controls">
+            <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
+            <button class="btn-download" onclick="downloadPDF()">📥 Unduh PDF</button>
+        </div>
+    </div>
+    
+    <script>
+        function downloadPDF() {
+            // Menggunakan html2pdf library
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 10,
+                filename: 'Nilai_Referensi_Kesehatan.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { 
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a4'
+                }
+            };
+            
+            // Load html2pdf library
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            document.head.appendChild(script);
+            
+            script.onload = function() {
+                html2pdf().set(opt).from(element).save();
+            };
+        }
+    </script>
+</body>
+</html>

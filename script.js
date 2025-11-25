@@ -32,19 +32,37 @@ const paramDesc = {
 };
 
 const rekomendasi = {
-  bmi: { min: 18.5, max: 24.9, status: v=>(v>=18.5 && v<=24.9?'Good':'Needs Attention'), rec: '18.5-24.9' },
-  bodyFat: { min: 10, max: 20, status: v=>(v>=10 && v<=20?'Good':'Needs Attention'), rec: '10-20%' },
-  visceralFat: { min: 1, max: 9, status: v=>(v>=1&&v<=9?'Good':'Needs Attention'), rec: '1-9' },
-  bodyAge: { status: (v,age)=>(v<=age?'Good':'Needs Attention'), rec: '≤ actual age' },
-  subcutaneous: { min: 12, max: 14, status: v=>(v>=12&&v<=14?'Good':'Needs Attention'), rec:'12-14%' },
-  trunkSubcutaneous: { min: 10, max: 12, status: v=>(v>=10&&v<=12?'Good':'Needs Attention'), rec:'10-12%' },
-  armsFat: { min: 15, max: 20, status: v=>(v>=15&&v<=20?'Good':'Needs Attention'), rec:'15-20%' },
-  legsFat: { min: 15, max: 20, status: v=>(v>=15&&v<=20?'Good':'Needs Attention'), rec:'15-20%' },
-  skeletalMuscle: { min: 30, status: v=>(v>=30?'Good':'Needs Attention'), rec:'>30%' },
-  skeletalTrunk: { status: v=>(v>=25?'Good':'Needs Attention'), rec:'Higher is better' },
-  skeletalArms: { status: v=>(v>=35?'Good':'Needs Attention'), rec:'Higher is better' },
-  skeletalLegs: { status: v=>(v>=50?'Good':'Needs Attention'), rec:'Higher is better' },
-  bmr: { min:1400, max:1700, status:v=>(v>=1400&&v<=1700?'Good':'Needs Attention'), rec:'1400-1700' }
+  male: {
+    bmi: { min: 18.5, max: 24.9, rec: '18.5-24.9' },
+    bodyFat: { min: 10, max: 20, rec: '10-20%' },
+    visceralFat: { min: 1, max: 9, rec: '1-9' },
+    subcutaneous: { min: 8, max: 14, rec: '8-14%' },
+    trunkSubcutaneous: { min: 10, max: 12, rec: '10-12%' },
+    armsFat: { min: 15, max: 20, rec: '15-20%' },
+    legsFat: { min: 15, max: 20, rec: '15-20%' },
+    skeletalMuscle: { min: 28, rec: '>28%' },
+    skeletalTrunk: { min: 28, rec: '>28%' },
+    skeletalArms: { min: 28, rec: '>28%' },
+    skeletalLegs: { min: 50, rec: '>50%' },
+    bmr: { min: 1500, max: 1800, rec: '1500-1800' }
+  },
+  female: {
+    bmi: { min: 18.5, max: 24.9, rec: '18.5-24.9' },
+    bodyFat: { min: 25, max: 31, rec: '25-31%' },
+    visceralFat: { min: 1, max: 9, rec: '1-9' },
+    subcutaneous: { min: 18, max: 28, rec: '18-28%' },
+    trunkSubcutaneous: { min: 16, max: 20, rec: '16-20%' },
+    armsFat: { min: 22, max: 28, rec: '22-28%' },
+    legsFat: { min: 18, max: 22, rec: '18-22%' },
+    skeletalMuscle: { min: 22, rec: '>22%' },
+    skeletalTrunk: { min: 20, rec: '>20%' },
+    skeletalArms: { min: 25, rec: '>25%' },
+    skeletalLegs: { min: 40, rec: '>40%' },
+    bmr: { min: 1200, max: 1500, rec: '1200-1500' }
+  },
+  general: {
+    bodyAge: { rec: '≤ actual age' }
+  }
 };
 
 const getProfile = ()=>JSON.parse(localStorage.getItem('profile')||'null');
@@ -57,7 +75,7 @@ const hideModal = (id)=>bootstrap.Modal.getOrCreateInstance(document.getElementB
 
 function renderProfileHeader() {
   let prof = getProfile();
-  document.getElementById('userName').textContent = prof ? `Hello, ${prof.name} | ${prof.height} cm | Age: ${prof.age})` : '';
+  document.getElementById('userName').textContent = prof ? `Hello, ${prof.name} (${prof.gender}) | ${prof.height} cm | Age: ${prof.age}` : '';
 }
 
 function renderTable() {
@@ -77,8 +95,8 @@ function renderTable() {
         <td>${row.visceralFat}</td>
         <td>${row.bodyAge}</td>
         <td>
-          <button data-no="${idx}" class="btn btn-sm btn-info viewBtn">View</button>
-          <button data-no="${idx}" class="btn btn-sm btn-danger delBtn ms-1">Delete</button>
+         <a href="#" data-no="${idx}" class="btn btn-sm btn-outline-info"><i data-no="${idx}" class="bi bi-eye viewBtn"></i> </a>
+          <a href="#" data-no="${idx}" class="btn btn-sm btn-outline-danger ms-1"><i data-no="${idx}" class="bi bi-trash delBtn"></i></a> 
         </td>
       `;
       tbody.appendChild(tr);
@@ -97,7 +115,8 @@ document.getElementById('profileForm').onsubmit = function(e){
   setProfile({
     name: f.name.value,
     height: parseInt(f.height.value),
-    age: parseInt(f.age.value) 
+    age: parseInt(f.age.value),
+    gender: f.gender.value
   });
   renderProfileHeader();
   hideModal('profileModal');
@@ -110,6 +129,7 @@ document.getElementById('editProfileBtn').onclick = function() {
   f.name.value = prof.name||'';
   f.age.value = prof.age||'';
   f.height.value = prof.height||'';
+  f.gender.value = prof.gender||'';
   showModal('profileModal');
 };
 
@@ -150,21 +170,18 @@ document.getElementById('exportBtn').onclick = function(){
     alert("No data or profile to export!");
     return;
   }
-  // Profile info at the top
   const profileHeader = [
     `Name: ${prof.name}`,
     `Age: ${prof.age}`,
     `Height (cm): ${prof.height}`,
-    "" // empty line for separation
+    "" 
   ];
-  // CSV header
   const csvHeader = [
     "Date", "Weight (kg)", "BMI", "Body Fat (%)", "Visceral Fat", "Body Age",
     "Subcutaneous Fat (%)", "Trunk Subcutaneous (%)", "Arms Fat (%)", "Legs Fat (%)",
     "Skeletal Muscle (%)", "Skeletal Trunk (%)", "Skeletal Arms (%)", "Skeletal Legs (%)",
     "BMR (kcal)"
   ];
-  // Map each row to CSV format
   const rows = arr.map(row =>
     [
       row.date, row.weight || '', row.bmi, row.bodyFat, row.visceralFat, row.bodyAge,
@@ -173,11 +190,9 @@ document.getElementById('exportBtn').onclick = function(){
       row.bmr
     ]
   );
-  // Combine all
   let csv = profileHeader.join("\n") + "\n"
     + csvHeader.join(",") + "\n"
     + rows.map(r=>r.join(",")).join("\n");
-  // Download as file
   let blob = new Blob([csv],{type:'text/csv'});
   let link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -187,28 +202,47 @@ document.getElementById('exportBtn').onclick = function(){
   document.body.removeChild(link);
 };
 
-
-
 document.querySelector("tbody").onclick = function(e){
   if(e.target.classList.contains('viewBtn')){
+    console.log("loading...")
     let idx = parseInt(e.target.dataset.no,10);
     let data = getData()[idx];
     let prof = getProfile();
-    let hasil = Object.keys(rekomendasi).map(param=>{
+    if (!prof || !prof.gender) {
+      alert("Please set your gender in the profile to get an accurate assessment.");
+      return;
+    }
+
+    const genderSpecificRec = rekomendasi[prof.gender];
+    const allParams = { ...paramLabels };
+
+    let hasil = Object.keys(allParams).map(param=>{
       let v = data[param];
       let key = paramLabels[param] || param;
-      let status = param === "bodyAge" ?
-        rekomendasi[param].status(v, prof?prof.age:null) :
-        rekomendasi[param].status(v);
+      let recData = genderSpecificRec[param] || rekomendasi.general[param];
+      let status = "N/A";
+      let recText = "-";
+
+      if (recData) {
+        recText = recData.rec;
+        if (param === 'bodyAge') {
+          status = v <= prof.age ? 'Good' : 'Needs Attention';
+        } else if (recData.min && recData.max) {
+          status = (v >= recData.min && v <= recData.max) ? 'Good' : 'Needs Attention';
+        } else if (recData.min) {
+          status = v >= recData.min ? 'Good' : 'Needs Attention';
+        }
+      }
+
       return {
         label: key,
-        desc: paramDesc[key]||"",
-        value: v!=null?v:"-",
+        desc: paramDesc[key] || "",
+        value: v != null ? v : "-",
         status,
-        rec:rekomendasi[param].rec
+        rec: recText
       }
     });
-    let html = `${prof.name} (${prof.age} | ${prof.height} cm)
+    let html = `${prof.name} (${prof.gender}, ${prof.age} | ${prof.height} cm)
     <div><b>Date:</b> ${data.date}</div>
     <table class="table table-sm table-responsive">
     <thead><tr>
@@ -229,7 +263,6 @@ document.querySelector("tbody").onclick = function(e){
     html+=`</tbody></table>`;
     document.getElementById('detailContent').innerHTML = html;
 
-    // Activate Bootstrap tooltip for all relevant elements
     setTimeout(() => {
       let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
       tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -250,18 +283,7 @@ document.querySelector("tbody").onclick = function(e){
 };
 
 document.getElementById('printFormBtn').onclick = function(){
-  // const profile = getProfile();
-  // const userName = profile ? profile.name : '.........................';
-  // const userAge = profile ? profile.age : '.........................';
-  // const userHeight = profile ? profile.height : '.........................';
-
-  // document.querySelectorAll('.printable-form .profile-info').forEach(info => {
-  //   const nameDiv = info.querySelector('div:first-child');
-  //   nameDiv.innerHTML = `<strong> ${userName}</strong>`;
-  //   const extraDiv = info.querySelector('div:last-child');
-  //   extraDiv.innerHTML = `Age: ${userAge} / Height: ${userHeight} cm`;
-  // });
-
+  generatePrintableForms();
   window.print();
 };
 
@@ -271,7 +293,7 @@ function generatePrintableForms() {
   if (!formTemplate) return;
 
   const templateHTML = formTemplate.innerHTML;
-  printableArea.innerHTML = ''; // Clear the area
+  printableArea.innerHTML = '';
 
   for (let i = 0; i < 6; i++) {
     const newForm = document.createElement('div');
@@ -281,6 +303,5 @@ function generatePrintableForms() {
   }
 }
 
-// Generate the forms when the page loads
-generatePrintableForms();
+
 renderTable();
