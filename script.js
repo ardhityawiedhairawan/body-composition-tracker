@@ -75,7 +75,7 @@ const hideModal = (id)=>bootstrap.Modal.getOrCreateInstance(document.getElementB
 
 function renderProfileHeader() {
   let prof = getProfile();
-  document.getElementById('userName').textContent = prof ? `Hello, ${prof.name} (${prof.gender}) | ${prof.height} cm | Age: ${prof.age}` : '';
+  document.getElementById('userName').textContent = prof ? `${prof.name} (${prof.gender}) | ${prof.height} cm | Age: ${prof.age}` : '';
 }
 
 function renderTable() {
@@ -134,6 +134,12 @@ document.getElementById('editProfileBtn').onclick = function() {
 };
 
 document.getElementById('addBtn').onclick = function(){
+  let prof = getProfile();
+  if (!prof || !prof.gender) {
+    alert("Please set your profile first to get an accurate assessment.");
+    showModal('profileModal');
+    return;
+  }
   document.getElementById('inputForm').reset();
   showModal('inputModal');
 };
@@ -209,7 +215,8 @@ document.querySelector("tbody").onclick = function(e){
     let data = getData()[idx];
     let prof = getProfile();
     if (!prof || !prof.gender) {
-      alert("Please set your gender in the profile to get an accurate assessment.");
+      alert("Please set your profile to get an accurate assessment.");
+      showModal('profileModal');
       return;
     }
 
